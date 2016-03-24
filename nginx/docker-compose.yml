@@ -1,0 +1,23 @@
+web:
+  image: demohi/docker-compose-demo
+  volumes:
+   - .:/code
+  links:
+   - redis
+  expose:
+   - "5000"
+  environment:
+   - VIRTUAL_HOST=0.0.0.0
+  network_mode: overlay-test
+redis:
+  image: redis
+  network_mode: overlay-test
+lb:
+  image: jwilder/nginx-proxy
+  links:
+   - web
+  volumes:
+   - /var/run/docker.sock:/tmp/docker.sock:ro
+  ports:
+   - "80:80"
+  network_mode: overlay-test
